@@ -1,0 +1,40 @@
+[package]
+name = "chksum-sha2"
+version = "0.0.0"
+authors = ["Konrad Goławski <konrad@golawski.it>"]
+edition = "2021"
+rust-version = "1.70.0"
+description = "An implementation of SHA-2 hash functions with a straightforward interface for computing digests of bytes, files, directories, and more."
+readme = ".cargo/README.md"
+repository = "https://github.com/chksum-rs/sha2"
+license = "MIT"
+keywords = ["checksum", "digest", "hash", "sha2", "sha-2"]
+categories = ["algorithms", "cryptography", "filesystem"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+chksum-core = "0.0.0"
+chksum-hash-sha2 = { version = "0.0.0", default-features = false }
+chksum-sha2-224 = { version = "0.0.0", optional = true }
+chksum-sha2-256 = { version = "0.0.0", optional = true }
+chksum-sha2-384 = { version = "0.0.0", optional = true }
+chksum-sha2-512 = { version = "0.0.0", optional = true }
+
+[features]
+default = [
+    # algorithms
+    "224", "256", "384", "512",
+]
+
+# algorithms
+224 = ["chksum-sha2-224", "chksum-hash-sha2/224"]
+256 = ["chksum-sha2-256", "chksum-hash-sha2/256"]
+384 = ["chksum-sha2-384", "chksum-hash-sha2/384"]
+512 = ["chksum-sha2-512", "chksum-hash-sha2/512"]
+
+# extra options
+reader = ["chksum-sha2-224?/reader", "chksum-sha2-256?/reader", "chksum-sha2-384?/reader", "chksum-sha2-512?/reader"]
+writer = ["chksum-sha2-224?/writer", "chksum-sha2-256?/writer", "chksum-sha2-384?/writer", "chksum-sha2-512?/writer"]
