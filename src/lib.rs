@@ -19,7 +19,7 @@
 //!
 //! # Usage
 //!
-//! Use the [`chksum`] function to calcualate digest of file, directory and so on.
+//! Use the [`chksum`] function to calculate digest of file, directory and so on.
 //!
 //! ```rust
 //! # use std::path::Path;
@@ -36,6 +36,30 @@
 //!     "44752f37272e944fd2c913a35342eaccdd1aaf189bae50676b301ab213fc5061"
 //! );
 //! # Ok(())
+//! # }
+//! ```
+//!
+//! ## Asynchronous Runtime
+//!
+//! Use the [`async_chksum`] function to calculate digest of file, directory and so on.
+//!
+//! ```rust
+//! # #[cfg(feature = "async-runtime-tokio")]
+//! # {
+//! # use std::path::Path;
+//! # use chksum_sha2::sha2_256::Result;
+//! use chksum_sha2::sha2_256;
+//! use tokio::fs::File;
+//!
+//! # async fn wrapper(path: &Path) -> Result<()> {
+//! let file = File::open(path).await?;
+//! let digest = sha2_256::async_chksum(file).await?;
+//! assert_eq!(
+//!     digest.to_hex_lowercase(),
+//!     "44752f37272e944fd2c913a35342eaccdd1aaf189bae50676b301ab213fc5061"
+//! );
+//! # Ok(())
+//! # }
 //! # }
 //! ```
 //!
@@ -339,6 +363,12 @@
 //! cargo add chksum-sha2 --features reader,writer
 //! ```
 //!
+//! ## Asynchronous Runtime
+//!
+//! * `async-runtime-tokio`: Enables async interface for Tokio runtime.
+//!
+//! By default, neither of these features is enabled.
+//!
 //! # License
 //!
 //! This crate is licensed under the MIT License.
@@ -346,6 +376,9 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![forbid(unsafe_code)]
 
+#[cfg(feature = "async-runtime-tokio")]
+#[doc(no_inline)]
+pub use chksum_core::async_chksum;
 #[doc(no_inline)]
 pub use chksum_core::{chksum, Digest, Error, Hash, Result};
 #[doc(no_inline)]
